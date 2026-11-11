@@ -1,0 +1,1413 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#142b4a">
+<title>Sharing Our Skills — Family Mission</title>
+
+<style>
+:root {
+  --navy: #142b4a;
+  --blue: #3478e5;
+  --light-blue: #eaf3ff;
+  --yellow: #ffcf56;
+  --green: #36b985;
+  --red: #ed6464;
+  --white: #ffffff;
+  --bg: #f1f6fc;
+  --text: #253750;
+  --muted: #718198;
+  --radius: 22px;
+  --shadow: 0 8px 24px rgba(20,43,74,.09);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:focus-visible {
+  outline: 4px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.topbar {
+  background: var(--navy);
+  color: white;
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-size: clamp(17px, 3vw, 23px);
+  font-weight: 900;
+  letter-spacing: .5px;
+}
+
+.brand span { color: var(--yellow); }
+
+.audio-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.audio-btn {
+  background: #284363;
+  color: white;
+  border: 1px solid #49617e;
+  border-radius: 12px;
+  padding: 10px 13px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.audio-btn.active {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+main {
+  width: min(1000px, 100%);
+  margin: auto;
+  padding: 22px 16px 40px;
+}
+
+.screen {
+  display: none;
+  animation: screenIn .45s ease both;
+}
+
+.screen.active { display: block; }
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #e1edff, #fff7dd);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
+.hero h1 {
+  color: var(--navy);
+  font-size: clamp(28px, 5vw, 48px);
+  margin: 10px 0;
+}
+
+.hero p {
+  max-width: 650px;
+  margin: 10px auto;
+  line-height: 1.6;
+  font-size: 17px;
+}
+
+.hero-art {
+  width: 100%;
+  max-width: 350px;
+  margin: 15px auto;
+  display: block;
+}
+
+.mission-card {
+  background: white;
+  padding: 22px;
+  margin-top: 18px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.mission-card h2 {
+  color: var(--navy);
+  margin-top: 0;
+}
+
+.mission-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.mission-item {
+  border: 2px solid #e2eaf5;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f9fbff;
+}
+
+.mission-item strong {
+  color: var(--blue);
+  display: block;
+  font-size: 16px;
+}
+
+.mission-item small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.primary-btn, .secondary-btn {
+  border: 0;
+  border-radius: 15px;
+  padding: 15px 24px;
+  font-size: 17px;
+  font-weight: 900;
+  transition: transform .15s, filter .15s;
+}
+
+.primary-btn {
+  background: var(--blue);
+  color: white;
+  box-shadow: 0 5px 0 #2256aa;
+}
+
+.secondary-btn {
+  background: #eaf1fb;
+  color: var(--navy);
+}
+
+.primary-btn:hover, .secondary-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.primary-btn:active { transform: translateY(2px); }
+
+.center { text-align: center; }
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.level-label {
+  background: var(--navy);
+  color: white;
+  padding: 9px 14px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: white;
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-weight: bold;
+  box-shadow: var(--shadow);
+  font-size: 14px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 30px;
+  background: #dce6f4;
+  overflow: hidden;
+  margin: 12px 0 20px;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--green);
+  border-radius: inherit;
+  transition: width .4s ease;
+}
+
+.question-card {
+  background: white;
+  border-radius: 25px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.question-title {
+  color: var(--navy);
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 900;
+  line-height: 1.4;
+  margin: 5px 0 10px;
+}
+
+.question-subtitle {
+  color: var(--muted);
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+
+.object-stage {
+  background: linear-gradient(180deg, #f3f8ff, #eaf2fc);
+  border: 2px solid #dce9fa;
+  border-radius: 22px;
+  width: min(100%, 350px);
+  height: 240px;
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.object-stage svg {
+  width: 100%;
+  height: 100%;
+  max-width: 250px;
+  max-height: 205px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+  max-width: 700px;
+  margin: 18px auto 0;
+}
+
+.option-btn {
+  background: white;
+  color: var(--navy);
+  border: 2px solid #dce6f4;
+  border-radius: 16px;
+  min-height: 62px;
+  padding: 12px;
+  font-size: clamp(15px, 2.5vw, 18px);
+  font-weight: bold;
+  line-height: 1.35;
+  transition: all .2s;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  background: var(--light-blue);
+  transform: translateY(-2px);
+}
+
+.option-btn.correct {
+  border-color: var(--green);
+  background: #e3fff2;
+  color: #147c50;
+}
+
+.option-btn.wrong {
+  border-color: var(--red);
+  background: #fff0f0;
+  color: #a52e2e;
+}
+
+.option-btn:disabled { cursor: default; }
+
+.feedback {
+  min-height: 58px;
+  margin: 16px auto 0;
+  max-width: 700px;
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.feedback.good { color: #138052; }
+.feedback.bad { color: #bd4141; }
+
+.next-area {
+  margin: 12px auto;
+  display: none;
+}
+
+.next-area.show { display: block; }
+
+.hint-btn {
+  border: 0;
+  background: transparent;
+  color: var(--blue);
+  font-weight: bold;
+  text-decoration: underline;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.hint {
+  display: none;
+  max-width: 650px;
+  margin: 8px auto;
+  padding: 13px;
+  background: #fff7dd;
+  border-radius: 12px;
+  line-height: 1.5;
+}
+
+.hint.show { display: block; }
+
+.completion {
+  text-align: center;
+  background: white;
+  border-radius: 28px;
+  padding: 30px 20px;
+  box-shadow: var(--shadow);
+}
+
+.completion h1 {
+  color: var(--navy);
+  font-size: clamp(28px, 5vw, 42px);
+}
+
+.big-score {
+  font-size: clamp(38px, 8vw, 65px);
+  font-weight: 900;
+  color: var(--blue);
+  margin: 12px;
+}
+
+.completion p {
+  line-height: 1.6;
+  font-size: 17px;
+}
+
+.badge {
+  display: inline-block;
+  border-radius: 14px;
+  background: #fff3cb;
+  color: #805a00;
+  padding: 12px 18px;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.final-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.confetti {
+  position: fixed;
+  top: -15px;
+  width: 9px;
+  height: 13px;
+  z-index: 999;
+  pointer-events: none;
+  animation: fall 2.6s linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 25px 0 0;
+}
+
+@media (max-width: 600px) {
+  main { padding: 14px 10px 30px; }
+  .topbar { padding: 12px; }
+  .audio-btn { padding: 9px 10px; font-size: 12px; }
+  .mission-list { grid-template-columns: 1fr; }
+  .question-card { padding: 15px 12px; }
+  .object-stage { height: 210px; }
+  .options { gap: 9px; }
+  .option-btn { min-height: 65px; padding: 9px; }
+  .game-header { align-items: flex-start; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">SHARING <span>OUR SKILLS</span></div>
+
+  <div class="audio-controls">
+    <button class="audio-btn" id="musicBtn" onclick="toggleMusic()">
+      Music: OFF
+    </button>
+    <button class="audio-btn" id="soundBtn" onclick="toggleSound()">
+      Sound: ON
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- HOME SCREEN -->
+<section class="screen active" id="home">
+  <div class="hero">
+    <svg class="hero-art" viewBox="0 0 360 200" role="img"
+         aria-label="Dos niños preparando una mochila para una aventura">
+      <rect x="10" y="10" width="340" height="180" rx="28" fill="#d8e9ff"/>
+      <circle cx="180" cy="100" r="72" fill="#f7faff"/>
+      <!-- Backpack -->
+      <rect x="142" y="76" width="76" height="90" rx="20" fill="#3478e5"/>
+      <rect x="157" y="100" width="46" height="43" rx="10" fill="#2458a9"/>
+      <rect x="165" y="112" width="30" height="8" rx="4" fill="#ffcf56"/>
+      <!-- Child 1 -->
+      <circle cx="100" cy="62" r="28" fill="#e6ad7b"/>
+      <path d="M72 60 Q73 25 105 33 Q126 36 128 58 L114 45 L85 48Z" fill="#593b2b"/>
+      <rect x="73" y="93" width="54" height="72" rx="17" fill="#36b985"/>
+      <path d="M80 111 L52 140 M120 111 L143 132" stroke="#e6ad7b" stroke-width="14" stroke-linecap="round"/>
+      <path d="M84 165 L78 185 M115 165 L120 185" stroke="#253750" stroke-width="13" stroke-linecap="round"/>
+      <!-- Child 2 -->
+      <circle cx="260" cy="62" r="28" fill="#b9794e"/>
+      <path d="M232 55 Q236 23 269 31 Q286 35 287 57 L272 43 L243 47Z" fill="#3c2c25"/>
+      <rect x="232" y="93" width="56" height="72" rx="17" fill="#ffcf56"/>
+      <path d="M238 112 L217 132 M282 112 L310 140" stroke="#b9794e" stroke-width="14" stroke-linecap="round"/>
+      <path d="M244 165 L238 185 M276 165 L282 185" stroke="#253750" stroke-width="13" stroke-linecap="round"/>
+    </svg>
+
+    <h1>Family Mission!</h1>
+    <p>
+      Welcome to our adventure! Let's learn English, share our skills
+      and help each other.
+    </p>
+    <p>
+      <strong>¡Prepará tu equipo y jugá en familia!</strong>
+    </p>
+    <button class="primary-btn" onclick="startLevel1()">START MISSION</button>
+  </div>
+
+  <div class="mission-card">
+    <h2>Your mission</h2>
+    <div class="mission-list">
+      <div class="mission-item">
+        <div>
+          <strong>LEVEL 1 — Vocabulary</strong>
+          <small>Discover 10 everyday objects.</small>
+        </div>
+      </div>
+      <div class="mission-item">
+        <div>
+          <strong>LEVEL 2 — Grammar</strong>
+          <small>Ask questions and complete sentences.</small>
+        </div>
+      </div>
+    </div>
+    <p>
+      <strong>Family tip:</strong> An adult can read the questions aloud,
+      explain the clues and help the player think in English.
+    </p>
+  </div>
+</section>
+
+<!-- LEVEL 1 -->
+<section class="screen" id="level1">
+  <div class="game-header">
+    <div class="level-label">LEVEL 1 · VOCABULARY</div>
+    <div class="stats">
+      <div class="stat" id="score1">Score: 0</div>
+      <div class="stat" id="round1">Round: 1 / 10</div>
+    </div>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="progress1"></div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-title">What is this object?</div>
+    <p class="question-subtitle">
+      Look carefully at the picture. Choose the correct word.
+    </p>
+
+    <div class="object-stage" id="objectStage"></div>
+
+    <div class="options" id="options1"></div>
+    <div class="feedback" id="feedback1" aria-live="polite"></div>
+
+    <div class="next-area" id="next1">
+      <button class="primary-btn" onclick="nextLevel1()">NEXT OBJECT</button>
+    </div>
+  </div>
+
+  <div class="center">
+    <button class="hint-btn" onclick="showHint1()">Need a clue?</button>
+    <div class="hint" id="hint1"></div>
+  </div>
+</section>
+
+<!-- LEVEL 2 -->
+<section class="screen" id="level2">
+  <div class="game-header">
+    <div class="level-label">LEVEL 2 · TEAM CHALLENGE</div>
+    <div class="stats">
+      <div class="stat" id="score2">Score: 0</div>
+      <div class="stat" id="round2">Round: 1 / 10</div>
+    </div>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="progress2"></div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-title" id="grammarTitle">Complete the sentence!</div>
+    <p class="question-subtitle" id="grammarContext"></p>
+
+    <div class="object-stage" id="grammarStage"></div>
+
+    <div class="question-title" id="grammarQuestion"></div>
+    <div class="options" id="options2"></div>
+
+    <div class="feedback" id="feedback2" aria-live="polite"></div>
+
+    <div class="next-area" id="next2">
+      <button class="primary-btn" onclick="nextLevel2()">NEXT CHALLENGE</button>
+    </div>
+  </div>
+
+  <div class="center">
+    <button class="hint-btn" onclick="showHint2()">Need a grammar clue?</button>
+    <div class="hint" id="hint2"></div>
+  </div>
+</section>
+
+<!-- COMPLETION -->
+<section class="screen" id="complete">
+  <div class="completion">
+    <h1>MISSION COMPLETE!</h1>
+    <p>You did it! You shared your skills and helped your team.</p>
+
+    <div class="big-score" id="finalScore">0 / 20</div>
+    <div class="badge" id="finalBadge">English Explorer</div>
+
+    <p id="finalMessage"></p>
+
+    <div class="final-buttons">
+      <button class="primary-btn" onclick="restartGame()">PLAY AGAIN</button>
+      <button class="secondary-btn" onclick="goHome()">HOME</button>
+    </div>
+  </div>
+</section>
+
+<div class="footer-note">
+  Sharing Our Skills · English Learning Adventure · 5th Grade
+</div>
+
+</main>
+
+<script>
+/* =========================================================
+   GAME DATA
+========================================================= */
+
+const vocabulary = [
+  {
+    word: "key",
+    clue: "You use it to open or lock a door.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A metal key">
+        <circle cx="65" cy="78" r="34" fill="#f5c94e" stroke="#a77b13" stroke-width="7"/>
+        <circle cx="65" cy="78" r="13" fill="#eaf2fc"/>
+        <rect x="91" y="68" width="94" height="20" rx="5" fill="#f5c94e" stroke="#a77b13" stroke-width="4"/>
+        <rect x="145" y="82" width="14" height="20" fill="#f5c94e" stroke="#a77b13" stroke-width="3"/>
+        <rect x="169" y="82" width="14" height="16" fill="#f5c94e" stroke="#a77b13" stroke-width="3"/>
+      </svg>`
+  },
+  {
+    word: "bandage",
+    clue: "You wrap it around a small cut or injury.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A medical adhesive bandage">
+        <g transform="rotate(-35 110 90)">
+          <rect x="35" y="58" width="150" height="64" rx="30" fill="#f1c99b" stroke="#b88755" stroke-width="4"/>
+          <rect x="83" y="68" width="54" height="44" rx="10" fill="#fff4dc" stroke="#d9b98c" stroke-width="3"/>
+          <g fill="#d9b98c">
+            <circle cx="92" cy="78" r="3"/><circle cx="106" cy="78" r="3"/><circle cx="120" cy="78" r="3"/>
+            <circle cx="92" cy="102" r="3"/><circle cx="106" cy="102" r="3"/><circle cx="120" cy="102" r="3"/>
+          </g>
+        </g>
+      </svg>`
+  },
+  {
+    word: "snack",
+    clue: "A small amount of food you eat between meals.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A sandwich snack">
+        <path d="M42 112 L110 38 L178 112 Z" fill="#f2d28b" stroke="#b78a40" stroke-width="5"/>
+        <path d="M51 105 L110 49 L169 105 Z" fill="#fff0bf"/>
+        <path d="M45 112 L175 112 L160 128 L60 128 Z" fill="#4aaf62" stroke="#27853c" stroke-width="4"/>
+        <path d="M55 128 L165 128 L145 150 L75 150 Z" fill="#e4b86b" stroke="#b78a40" stroke-width="4"/>
+        <path d="M60 113 L160 113" stroke="#df5b4f" stroke-width="8"/>
+      </svg>`
+  },
+  {
+    word: "rope",
+    clue: "A long, thick cord used for tying or climbing.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A coiled rope">
+        <ellipse cx="110" cy="92" rx="72" ry="56" fill="none" stroke="#bd8848" stroke-width="20"/>
+        <ellipse cx="110" cy="92" rx="52" ry="38" fill="none" stroke="#d5a365" stroke-width="18"/>
+        <ellipse cx="110" cy="92" rx="30" ry="20" fill="none" stroke="#bd8848" stroke-width="16"/>
+        <path d="M165 132 C190 145 184 162 160 155 L140 142" fill="none" stroke="#d5a365" stroke-width="16" stroke-linecap="round"/>
+        <path d="M40 68 L52 58 M57 51 L69 44 M82 37 L94 34 M117 34 L130 37" stroke="#f1d2a5" stroke-width="3"/>
+      </svg>`
+  },
+  {
+    word: "puzzle",
+    clue: "A game made of pieces that fit together.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="Four colorful puzzle pieces">
+        <path d="M40 35 H85 C85 18 112 18 112 35 H145 V70 C128 70 128 96 145 96 V130 H110 C110 113 84 113 84 130 H40 V96 C57 96 57 70 40 70 Z" fill="#3478e5" stroke="#2458a9" stroke-width="4"/>
+        <path d="M112 35 H180 V70 C197 70 197 96 180 96 V130 H145 V96 C128 96 128 70 145 70 V35 Z" fill="#ffcf56" stroke="#bd8c17" stroke-width="4"/>
+        <path d="M40 130 H84 C84 113 110 113 110 130 H145 V155 H40 Z" fill="#36b985" stroke="#178557" stroke-width="4"/>
+        <path d="M145 130 H180 V155 H145 Z" fill="#ed6464" stroke="#b83b3b" stroke-width="4"/>
+      </svg>`
+  },
+  {
+    word: "money",
+    clue: "You use it to buy things. It can be paper bills or coins.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="Paper money bills and coins">
+        <rect x="25" y="35" width="130" height="75" rx="8" fill="#8fd6a7" stroke="#24804b" stroke-width="5"/>
+        <rect x="38" y="48" width="104" height="49" rx="5" fill="none" stroke="#24804b" stroke-width="3"/>
+        <circle cx="90" cy="72" r="20" fill="#c7f0d2" stroke="#24804b" stroke-width="3"/>
+        <text x="90" y="80" text-anchor="middle" font-size="24" font-weight="bold" fill="#24804b">$</text>
+        <circle cx="153" cy="126" r="30" fill="#f5c94e" stroke="#a77b13" stroke-width="5"/>
+        <circle cx="153" cy="126" r="21" fill="none" stroke="#a77b13" stroke-width="3"/>
+        <text x="153" y="136" text-anchor="middle" font-size="25" font-weight="bold" fill="#a77b13">$</text>
+      </svg>`
+  },
+  {
+    word: "diary",
+    clue: "A personal book where you write about your day.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A personal diary notebook">
+        <rect x="48" y="25" width="125" height="135" rx="10" fill="#ed6464" stroke="#b83b3b" stroke-width="5"/>
+        <rect x="60" y="37" width="101" height="111" rx="5" fill="#fff2f2"/>
+        <path d="M72 62 H149 M72 80 H149 M72 98 H149 M72 116 H130" stroke="#d99a9a" stroke-width="4" stroke-linecap="round"/>
+        <path d="M48 25 V160" stroke="#a52e2e" stroke-width="8"/>
+        <rect x="96" y="48" width="34" height="12" rx="6" fill="#ffcf56"/>
+      </svg>`
+  },
+  {
+    word: "magazine",
+    clue: "A publication with articles, photos and stories.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A colorful magazine">
+        <rect x="45" y="22" width="130" height="140" rx="5" fill="#3478e5" stroke="#2458a9" stroke-width="5"/>
+        <rect x="57" y="34" width="106" height="116" fill="#f7faff"/>
+        <rect x="57" y="34" width="106" height="28" fill="#ffcf56"/>
+        <text x="110" y="53" text-anchor="middle" font-size="15" font-weight="bold" fill="#142b4a">MAGAZINE</text>
+        <rect x="65" y="70" width="90" height="47" rx="3" fill="#8fd6a7"/>
+        <circle cx="110" cy="91" r="16" fill="#f1c99b"/>
+        <path d="M88 105 Q110 78 132 105" fill="#3478e5"/>
+        <path d="M68 128 H152 M68 137 H130" stroke="#718198" stroke-width="4"/>
+      </svg>`
+  },
+  {
+    word: "torch",
+    clue: "A portable light you use when it is dark.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A handheld flashlight">
+        <g transform="rotate(-35 110 90)">
+          <rect x="76" y="66" width="68" height="90" rx="12" fill="#3478e5" stroke="#2458a9" stroke-width="5"/>
+          <rect x="67" y="45" width="86" height="35" rx="10" fill="#aebdce" stroke="#66788e" stroke-width="5"/>
+          <rect x="82" y="50" width="56" height="24" rx="7" fill="#fff7c8"/>
+          <path d="M88 86 H132 M88 98 H132 M88 110 H132" stroke="#2458a9" stroke-width="4"/>
+          <rect x="95" y="124" width="30" height="12" rx="5" fill="#ffcf56"/>
+        </g>
+        <path d="M154 45 L195 22 L181 55 L207 67 L158 75 Z" fill="#ffdf78" opacity=".75"/>
+      </svg>`
+  },
+  {
+    word: "helmet",
+    clue: "You wear it on your head to protect it.",
+    svg: `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A protective helmet">
+        <path d="M35 112 C35 62 68 28 110 28 C152 28 185 62 185 112 L160 112 L155 130 H70 L65 112 Z" fill="#ffcf56" stroke="#bd8c17" stroke-width="5"/>
+        <path d="M50 105 C60 70 82 50 110 50 C138 50 160 70 170 105" fill="none" stroke="#fff0ae" stroke-width="8"/>
+        <rect x="65" y="112" width="90" height="18" rx="6" fill="#3478e5" stroke="#2458a9" stroke-width="4"/>
+        <path d="M80 130 L80 145 M140 130 L140 145" stroke="#718198" stroke-width="5" stroke-linecap="round"/>
+      </svg>`
+  }
+];
+
+/* =========================================================
+   LEVEL 2 GRAMMAR CHALLENGES
+========================================================= */
+
+const grammarQuestions = [
+  {
+    title: "Choose the correct answer!",
+    context: "You are going on a school trip.",
+    question: "Do you have to take your backpack?",
+    svg: "backpack",
+    options: ["Yes, I do.", "Yes, I does.", "No, I am.", "Yes, I have."],
+    correct: "Yes, I do.",
+    hint: "For 'Do you have to...?', answer with 'Yes, I do.' or 'No, I don't.'"
+  },
+  {
+    title: "Complete the sentence!",
+    context: "Your team is getting ready for an adventure.",
+    question: "We ______ take our backpacks.",
+    svg: "backpack",
+    options: ["have to", "has to", "do", "does"],
+    correct: "have to",
+    hint: "With 'We', use 'have to' to express an obligation."
+  },
+  {
+    title: "Choose the correct answer!",
+    context: "You are helping a friend.",
+    question: "Do you have to take a bandage?",
+    svg: "bandage",
+    options: ["No, I don't.", "No, I doesn't.", "No, I am not.", "No, I haven't."],
+    correct: "No, I don't.",
+    hint: "The short negative answer is 'No, I don't.'"
+  },
+  {
+    title: "Complete the question!",
+    context: "You are planning what to bring.",
+    question: "______ we have to take a rope?",
+    svg: "rope",
+    options: ["Do", "Does", "Are", "Have"],
+    correct: "Do",
+    hint: "For a question with 'we', begin with 'Do we...?'"
+  },
+  {
+    title: "Choose the correct answer!",
+    context: "Your family is preparing a picnic.",
+    question: "Do you have to take a snack?",
+    svg: "snack",
+    options: ["Yes, I do.", "Yes, I does.", "Yes, I have.", "Yes, I am."],
+    correct: "Yes, I do.",
+    hint: "Remember: 'Do you...?' → 'Yes, I do.'"
+  },
+  {
+    title: "Complete the sentence!",
+    context: "Your group is solving a problem together.",
+    question: "We ______ solve the puzzle.",
+    svg: "puzzle",
+    options: ["have to", "has to", "does", "are"],
+    correct: "have to",
+    hint: "'We have to' expresses something your team must do."
+  },
+  {
+    title: "Choose the correct answer!",
+    context: "You are getting ready to go out.",
+    question: "Do you have to take money?",
+    svg: "money",
+    options: ["No, I don't.", "No, I doesn't.", "No, I not.", "No, I haven't."],
+    correct: "No, I don't.",
+    hint: "The correct short answer is 'No, I don't.'"
+  },
+  {
+    title: "Complete the sentence!",
+    context: "You are preparing for a camping trip.",
+    question: "We ______ take a torch.",
+    svg: "torch",
+    options: ["have to", "has to", "do", "does"],
+    correct: "have to",
+    hint: "Use 'We have to' when the whole team has an obligation."
+  },
+  {
+    title: "Choose the correct answer!",
+    context: "You are preparing for a bike ride.",
+    question: "Do you have to wear a helmet?",
+    svg: "helmet",
+    options: ["Yes, I do.", "Yes, I does.", "Yes, I have.", "Yes, I am."],
+    correct: "Yes, I do.",
+    hint: "For 'Do you have to...?', say 'Yes, I do.'"
+  },
+  {
+    title: "Complete the sentence!",
+    context: "Your team is organizing the adventure.",
+    question: "We ______ take our diaries and magazines.",
+    svg: "diary",
+    options: ["don't have to", "doesn't have to", "don't has to", "not have to"],
+    correct: "don't have to",
+    hint: "For a negative obligation with 'we', use 'We don't have to...'"
+  }
+];
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let currentScreen = "home";
+let round1Index = 0;
+let round2Index = 0;
+let score1 = 0;
+let score2 = 0;
+let answered1 = false;
+let answered2 = false;
+let shuffledVocabulary = [];
+let shuffledGrammar = [];
+let audioContext = null;
+let musicEnabled = false;
+let soundEnabled = true;
+let musicTimer = null;
+let musicNoteIndex = 0;
+
+/* =========================================================
+   SCREEN MANAGEMENT
+========================================================= */
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+
+  const target = document.getElementById(id);
+  target.classList.remove("active");
+
+  // Restart the animation.
+  void target.offsetWidth;
+  target.classList.add("active");
+
+  currentScreen = id;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function goHome() {
+  showScreen("home");
+}
+
+/* =========================================================
+   SHUFFLE
+========================================================= */
+
+function shuffle(array) {
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+/* =========================================================
+   LEVEL 1 — VOCABULARY
+========================================================= */
+
+function startLevel1() {
+  round1Index = 0;
+  round2Index = 0;
+  score1 = 0;
+  score2 = 0;
+
+  shuffledVocabulary = shuffle(vocabulary);
+  shuffledGrammar = shuffle(grammarQuestions);
+
+  updateScore1();
+  showScreen("level1");
+  renderLevel1();
+}
+
+function renderLevel1() {
+  answered1 = false;
+
+  const item = shuffledVocabulary[round1Index];
+
+  document.getElementById("round1").textContent =
+    `Round: ${round1Index + 1} / ${shuffledVocabulary.length}`;
+
+  document.getElementById("progress1").style.width =
+    `${(round1Index / shuffledVocabulary.length) * 100}%`;
+
+  document.getElementById("objectStage").innerHTML = item.svg;
+
+  document.getElementById("feedback1").textContent = "";
+  document.getElementById("feedback1").className = "feedback";
+  document.getElementById("next1").classList.remove("show");
+
+  document.getElementById("hint1").classList.remove("show");
+  document.getElementById("hint1").textContent = "";
+
+  const wrongOptions = shuffle(
+    vocabulary.filter(v => v.word !== item.word)
+  ).slice(0, 3);
+
+  const options = shuffle([item, ...wrongOptions]);
+
+  const container = document.getElementById("options1");
+  container.innerHTML = "";
+
+  options.forEach(option => {
+    const button = document.createElement("button");
+    button.className = "option-btn";
+    button.textContent = option.word;
+    button.onclick = () => checkLevel1(button, option.word, item.word);
+    container.appendChild(button);
+  });
+}
+
+function checkLevel1(button, selected, correct) {
+  if (answered1) return;
+  answered1 = true;
+
+  const buttons = document.querySelectorAll("#options1 .option-btn");
+  buttons.forEach(btn => btn.disabled = true);
+
+  const feedback = document.getElementById("feedback1");
+
+  if (selected === correct) {
+    score1 += 1;
+    button.classList.add("correct");
+
+    feedback.textContent = `Excellent! The correct word is "${correct}".`;
+    feedback.className = "feedback good";
+
+    playEffect("correct");
+    celebrate();
+  } else {
+    button.classList.add("wrong");
+
+    buttons.forEach(btn => {
+      if (btn.textContent === correct) {
+        btn.classList.add("correct");
+      }
+    });
+
+    feedback.textContent = `Good try! The correct word is "${correct}".`;
+    feedback.className = "feedback bad";
+
+    playEffect("wrong");
+  }
+
+  updateScore1();
+  document.getElementById("progress1").style.width =
+    `${((round1Index + 1) / shuffledVocabulary.length) * 100}%`;
+
+  document.getElementById("next1").classList.add("show");
+}
+
+function nextLevel1() {
+  round1Index++;
+
+  if (round1Index >= shuffledVocabulary.length) {
+    showScreen("level2");
+    renderLevel2();
+  } else {
+    renderLevel1();
+  }
+}
+
+function showHint1() {
+  const item = shuffledVocabulary[round1Index];
+  const hint = document.getElementById("hint1");
+
+  hint.textContent = item.clue;
+  hint.classList.add("show");
+}
+
+/* =========================================================
+   LEVEL 2 — GRAMMAR
+========================================================= */
+
+function renderLevel2() {
+  answered2 = false;
+
+  const item = shuffledGrammar[round2Index];
+
+  document.getElementById("round2").textContent =
+    `Round: ${round2Index + 1} / ${shuffledGrammar.length}`;
+
+  document.getElementById("progress2").style.width =
+    `${(round2Index / shuffledGrammar.length) * 100}%`;
+
+  document.getElementById("grammarTitle").textContent = item.title;
+  document.getElementById("grammarContext").textContent = item.context;
+  document.getElementById("grammarQuestion").textContent = item.question;
+
+  document.getElementById("grammarStage").innerHTML =
+    getGrammarIllustration(item.svg);
+
+  document.getElementById("feedback2").textContent = "";
+  document.getElementById("feedback2").className = "feedback";
+  document.getElementById("next2").classList.remove("show");
+
+  document.getElementById("hint2").classList.remove("show");
+  document.getElementById("hint2").textContent = "";
+
+  const container = document.getElementById("options2");
+  container.innerHTML = "";
+
+  shuffle(item.options).forEach(option => {
+    const button = document.createElement("button");
+    button.className = "option-btn";
+    button.textContent = option;
+    button.onclick = () => checkLevel2(button, option, item.correct);
+    container.appendChild(button);
+  });
+
+  updateScore2();
+}
+
+function checkLevel2(button, selected, correct) {
+  if (answered2) return;
+  answered2 = true;
+
+  const buttons = document.querySelectorAll("#options2 .option-btn");
+  buttons.forEach(btn => btn.disabled = true);
+
+  const feedback = document.getElementById("feedback2");
+
+  if (selected === correct) {
+    score2 += 1;
+    button.classList.add("correct");
+
+    feedback.textContent = `That's right! "${correct}" is correct.`;
+    feedback.className = "feedback good";
+
+    playEffect("correct");
+    celebrate();
+  } else {
+    button.classList.add("wrong");
+
+    buttons.forEach(btn => {
+      if (btn.textContent === correct) {
+        btn.classList.add("correct");
+      }
+    });
+
+    feedback.textContent = `Good try! The correct answer is "${correct}".`;
+    feedback.className = "feedback bad";
+
+    playEffect("wrong");
+  }
+
+  updateScore2();
+
+  document.getElementById("progress2").style.width =
+    `${((round2Index + 1) / shuffledGrammar.length) * 100}%`;
+
+  document.getElementById("next2").classList.add("show");
+}
+
+function nextLevel2() {
+  round2Index++;
+
+  if (round2Index >= shuffledGrammar.length) {
+    finishGame();
+  } else {
+    renderLevel2();
+  }
+}
+
+function showHint2() {
+  const item = shuffledGrammar[round2Index];
+  const hint = document.getElementById("hint2");
+
+  hint.textContent = item.hint;
+  hint.classList.add("show");
+}
+
+/* =========================================================
+   ILLUSTRATIONS FOR LEVEL 2
+========================================================= */
+
+function getGrammarIllustration(type) {
+  if (type === "backpack") {
+    return `
+      <svg viewBox="0 0 220 180" role="img" aria-label="A school backpack">
+        <path d="M75 45 Q75 20 110 20 Q145 20 145 45" fill="none" stroke="#718198" stroke-width="10"/>
+        <rect x="48" y="42" width="124" height="120" rx="25" fill="#3478e5" stroke="#2458a9" stroke-width="5"/>
+        <rect x="65" y="92" width="90" height="50" rx="14" fill="#2458a9"/>
+        <rect x="82" y="108" width="56" height="12" rx="6" fill="#ffcf56"/>
+        <rect x="100" y="50" width="20" height="30" rx="5" fill="#ffcf56"/>
+      </svg>`;
+  }
+
+  if (type === "bandage") return vocabulary.find(v => v.word === "bandage").svg;
+  if (type === "rope") return vocabulary.find(v => v.word === "rope").svg;
+  if (type === "snack") return vocabulary.find(v => v.word === "snack").svg;
+  if (type === "puzzle") return vocabulary.find(v => v.word === "puzzle").svg;
+  if (type === "money") return vocabulary.find(v => v.word === "money").svg;
+  if (type === "torch") return vocabulary.find(v => v.word === "torch").svg;
+  if (type === "helmet") return vocabulary.find(v => v.word === "helmet").svg;
+  if (type === "diary") return vocabulary.find(v => v.word === "diary").svg;
+
+  return vocabulary.find(v => v.word === "magazine").svg;
+}
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function updateScore1() {
+  document.getElementById("score1").textContent = `Score: ${score1}`;
+}
+
+function updateScore2() {
+  document.getElementById("score2").textContent = `Score: ${score2}`;
+}
+
+/* =========================================================
+   COMPLETION SCREEN
+========================================================= */
+
+function finishGame() {
+  const total = score1 + score2;
+  const maxScore = vocabulary.length + grammarQuestions.length;
+
+  document.getElementById("finalScore").textContent =
+    `${total} / ${maxScore}`;
+
+  let badge = "English Explorer";
+  let message = "Great effort! Keep practicing your English skills.";
+
+  if (total >= 18) {
+    badge = "English Super Star";
+    message = "Amazing work! You are a fantastic English team player!";
+  } else if (total >= 14) {
+    badge = "Teamwork Champion";
+    message = "Very good! You shared your skills and completed the mission!";
+  } else if (total >= 10) {
+    badge = "Brave Learner";
+    message = "Well done! You are learning more with every challenge.";
+  }
+
+  document.getElementById("finalBadge").textContent = badge;
+  document.getElementById("finalMessage").textContent = message;
+
+  showScreen("complete");
+  celebrate(100);
+  playEffect("victory");
+}
+
+function restartGame() {
+  startLevel1();
+}
+
+/* =========================================================
+   CONFETTI CELEBRATION
+========================================================= */
+
+function celebrate(amount = 35) {
+  const colors = ["#3478e5", "#ffcf56", "#36b985", "#ed6464", "#9b7be8"];
+
+  for (let i = 0; i < amount; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti";
+
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (1.8 + Math.random() * 1.5) + "s";
+    piece.style.animationDelay = Math.random() * .4 + "s";
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+    document.body.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 4000);
+  }
+}
+
+/* =========================================================
+   WEB AUDIO API — SOUND EFFECTS
+========================================================= */
+
+function getAudioContext() {
+  if (!audioContext) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+      return null;
+    }
+
+    audioContext = new AudioContextClass();
+  }
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+
+  return audioContext;
+}
+
+function playTone(frequency, duration, type = "sine", volume = 0.12, delay = 0) {
+  if (!soundEnabled) return;
+
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const oscillator = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, ctx.currentTime + delay);
+
+  gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+  gain.gain.exponentialRampToValueAtTime(volume, ctx.currentTime + delay + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+
+  oscillator.connect(gain);
+  gain.connect(ctx.destination);
+
+  oscillator.start(ctx.currentTime + delay);
+  oscillator.stop(ctx.currentTime + delay + duration + 0.03);
+}
+
+function playEffect(effect) {
+  if (!soundEnabled) return;
+
+  if (effect === "correct") {
+    playTone(523, .15, "sine", .12);
+    playTone(659, .15, "sine", .12, .13);
+    playTone(784, .22, "sine", .12, .26);
+  }
+
+  if (effect === "wrong") {
+    playTone(240, .18, "triangle", .10);
+    playTone(180, .25, "triangle", .10, .16);
+  }
+
+  if (effect === "victory") {
+    playTone(523, .18, "sine", .12);
+    playTone(659, .18, "sine", .12, .16);
+    playTone(784, .18, "sine", .12, .32);
+    playTone(1046, .45, "sine", .15, .48);
+  }
+}
+
+/* =========================================================
+   BACKGROUND MUSIC — INDEPENDENT CONTROL
+========================================================= */
+
+function toggleMusic() {
+  musicEnabled = !musicEnabled;
+
+  const button = document.getElementById("musicBtn");
+
+  if (musicEnabled) {
+    button.textContent = "Music: ON";
+    button.classList.add("active");
+
+    getAudioContext();
+    startMusic();
+  } else {
+    button.textContent = "Music: OFF";
+    button.classList.remove("active");
+
+    stopMusic();
+  }
+}
+
+function startMusic() {
+  stopMusic();
+
+  const melody = [
+    392, 494, 587, 494,
+    440, 523, 659, 523,
+    392, 494, 587, 659,
+    523, 494, 440, 392
+  ];
+
+  musicNoteIndex = 0;
+
+  musicTimer = setInterval(() => {
+    if (!musicEnabled) return;
+
+    const frequency = melody[musicNoteIndex % melody.length];
+
+    playMusicTone(frequency, .28, .045);
+    musicNoteIndex++;
+  }, 360);
+}
+
+function playMusicTone(frequency, duration, volume) {
+  const ctx = getAudioContext();
+  if (!ctx || !musicEnabled) return;
+
+  const oscillator = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  oscillator.type = "sine";
+  oscillator.frequency.value = frequency;
+
+  gain.gain.setValueAtTime(.001, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(volume, ctx.currentTime + .04);
+  gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + duration);
+
+  oscillator.connect(gain);
+  gain.connect(ctx.destination);
+
+  oscillator.start();
+  oscillator.stop(ctx.currentTime + duration);
+}
+
+function stopMusic() {
+  if (musicTimer) {
+    clearInterval(musicTimer);
+    musicTimer = null;
+  }
+}
+
+/* =========================================================
+   SOUND EFFECTS — INDEPENDENT CONTROL
+========================================================= */
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+
+  const button = document.getElementById("soundBtn");
+
+  if (soundEnabled) {
+    button.textContent = "Sound: ON";
+    button.classList.add("active");
+    playEffect("correct");
+  } else {
+    button.textContent = "Sound: OFF";
+    button.classList.remove("active");
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY & INITIALIZATION
+========================================================= */
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && musicEnabled) {
+    stopMusic();
+  } else if (!document.hidden && musicEnabled) {
+    startMusic();
+  }
+});
+
+// Initialize audio buttons.
+document.getElementById("musicBtn").classList.remove("active");
+document.getElementById("soundBtn").classList.add("active");
+</script>
+
+</body>
+</html>
